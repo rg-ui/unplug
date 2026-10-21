@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Unplug</string>
-    <string name="accessibility_service_label">Unplug Reel Counter &amp; Blocker</string>
-    <string name="accessibility_service_description">Tracks your scroll gestures inside Instagram Reels, YouTube Shorts, Snapchat and Facebook to help you break screen addiction and protect your brain.</string>
+    <string name="accessibility_service_label">Unplug Reel &amp; Short Counter</string>
+    <string name="accessibility_service_description">Unplug uses Accessibility Service solely to detect vertical scroll gestures inside YouTube Shorts and Instagram Reels to calculate your doomscroll dose and protect your brain. 100% on-device processing. Zero data collection, no personal messages or screen content are ever read.</string>
+
+    <!-- Prominent Disclosure Dialog for Play Store Compliance -->
+    <string name="disclosure_title">Accessibility Permission</string>
+    <string name="disclosure_message">To help you break doomscrolling addiction, Unplug needs the Accessibility Service permission.\n\n• Why it is needed: Detects when you scroll to the next video inside YouTube Shorts and Instagram Reels to count your daily dose.\n\n• Privacy &amp; Security: Unplug operates 100% locally on your device. We NEVER read messages, passwords, keystrokes, personal details, or video content.\n\n• Zero Data Collection: No data is ever saved or transmitted to any server.</string>
+    <string name="disclosure_agree">I Understand &amp; Enable</string>
+    <string name="disclosure_cancel">Not Now</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.brainunplug.app
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -65,9 +66,7 @@ class MainActivity : Activity() {
         // Accessibility Permission Click
         findViewById<View>(R.id.btnAccessibilityPerm).setOnClickListener {
             if (!isAccessibilityServiceEnabled()) {
-                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                startActivity(intent)
-                Toast.makeText(this, "Enable 'Unplug' in Accessibility settings", Toast.LENGTH_LONG).show()
+                showAccessibilityDisclosureDialog()
             } else {
                 Toast.makeText(this, "Accessibility Service is already Active! ✅", Toast.LENGTH_SHORT).show()
             }
@@ -150,6 +149,19 @@ class MainActivity : Activity() {
             tvOverlayStatusBtn.setBackgroundResource(R.drawable.bg_glass_btn_primary)
             tvOverlayStatusBtn.setTextColor(ContextCompat.getColor(this, R.color.black))
         }
+    }
+
+    private fun showAccessibilityDisclosureDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.disclosure_title))
+            .setMessage(getString(R.string.disclosure_message))
+            .setPositiveButton(getString(R.string.disclosure_agree)) { _, _ ->
+                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                startActivity(intent)
+                Toast.makeText(this, "Find 'Unplug Reel & Short Counter' and toggle it ON", Toast.LENGTH_LONG).show()
+            }
+            .setNegativeButton(getString(R.string.disclosure_cancel), null)
+            .show()
     }
 
     private fun isAccessibilityServiceEnabled(): Boolean {

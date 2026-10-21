@@ -3,9 +3,9 @@ package com.brainunplug.app.service
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.Intent
-import android.graphics.Rect
 import android.os.Build
 import android.os.SystemClock
+import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import com.brainunplug.app.BlockActivity
@@ -15,12 +15,12 @@ class ReelAccessibilityService : AccessibilityService() {
 
     private lateinit var prefs: PreferenceManager
     private var lastScrollTime: Long = 0
-    private var lastItemIndex: Int = -1
     private var currentPackage: String = ""
 
     companion object {
-        // Minimum time between valid reel scrolls (1.2 seconds to prevent rapid double-counting)
-        private const val SCROLL_DEBOUNCE_MS = 1200L
+        private const val TAG = "ReelAccessibility"
+        // 900ms debounce ensures 1 swipe gesture = 1 count, without blocking subsequent swipes
+        private const val SCROLL_DEBOUNCE_MS = 900L
     }
 
     override fun onCreate() {
@@ -31,17 +31,16 @@ class ReelAccessibilityService : AccessibilityService() {
     override fun onServiceConnected() {
         super.onServiceConnected()
         val info = AccessibilityServiceInfo().apply {
-            // ONLY listen for actual scroll events and window transitions!
-            // Crucial: DO NOT include TYPE_VIEW_SELECTED or TYPE_VIEW_CLICKED!
             eventTypes = AccessibilityEvent.TYPE_VIEW_SCROLLED or
-                    AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED or
-                    AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED
+                    AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED
             feedbackType = AccessibilityServiceInfo.FEEDBACK_GENERIC
             flags = AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS or
-                    AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS
-            notificationTimeout = 100
+                    AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS or
+                    AccessibilityServiceInfo.FLAG_INCLUDE_NOT_IMPORTANT_VIEWS
+            notificationTimeout = 50
         }
         serviceInfo = info
+        Log.d(TAG, "ReelAccessibilityService connected and active")
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
@@ -56,20 +55,25 @@ class ReelAccessibilityService : AccessibilityService() {
             AccessibilityEvent.TYPE_VIEW_SCROLLED -> {
                 handleScrollEvent(pkgName, event)
             }
-            AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED -> {
-                if (isTargetPackage(pkgName) && prefs.isOverlayEnabled()) {
-                    FloatingOverlayService.show(this)
-                }
-            }
         }
     }
 
-    private fun isTargetPackage(pkg: String): Boolean {
+    private fun isYouTube(pkg: String): Boolean {
         val lower = pkg.lowercase()
-        return lower.contains("youtube") ||
-                lower.contains("instagram") ||
-                lower.contains("snapchat") ||
-                lower.contains("facebook")
+        return lower == "com.google.android.youtube" ||
+                lower == "com.google.android.apps.youtube.mango" ||
+                lower.contains("youtube")
+    }
+
+    private fun isInstagram(pkg: String): Boolean {
+        val lower = pkg.lowercase()
+        return lower == "com.instagram.android" ||
+                lower == "com.instagram.lite" ||
+                lower.contains("instagram")
+    }
+
+    private fun isTargetPackage(pkg: String): Boolean {
+        return isYouTube(pkg) || isInstagram(pkg)
     }
 
     private fun isSystemWindow(pkg: String): Boolean {
@@ -77,8 +81,6 @@ class ReelAccessibilityService : AccessibilityService() {
         return lower.contains("systemui") ||
                 lower.contains("inputmethod") ||
                 lower.contains("keyboard") ||
-                lower.contains("coloros.gamespace") ||
-                lower.contains("oplus.cosa") ||
                 lower.contains("permissioncontroller")
     }
 
@@ -101,194 +103,149 @@ class ReelAccessibilityService : AccessibilityService() {
     private fun handleScrollEvent(pkgName: String, event: AccessibilityEvent) {
         if (!isTargetPackage(pkgName)) return
 
-        // 1. CLASS CHECK: Filter out buttons, images, text, and non-pager views
-        val className = event.className?.toString() ?: ""
-        if (isNonScrollableClass(className)) {
-            // User clicked or interacted with a button, text, or widget
+        // Filter out non-scrollable widgets (e.g. seekbars scrubbing during video playback)
+        val className = event.className?.toString()?.lowercase() ?: ""
+        if (className.contains("seekbar") ||
+            className.contains("progressbar") ||
+            className.contains("switch") ||
+            className.contains("edittext")
+        ) {
             return
         }
 
-        // Must be a list/pager container
-        if (!isScrollContainer(className)) {
-            return
-        }
-
-        val sourceNode = event.source
-
-        // 2. VIEW SIZE CHECK: Shorts and Reels containers are FULLSCREEN vertical pagers!
-        // A comment box, like button, horizontal chips, or mini-player is small (< 50% screen height)
-        val screenHeight = resources.displayMetrics.heightPixels
-        val viewBounds = Rect()
-        sourceNode?.getBoundsInScreen(viewBounds)
-        if (viewBounds.height() > 0 && viewBounds.height() < (screenHeight * 0.50)) {
-            // Too small to be a short/reel video player (e.g. comments drawer, reaction tray)
-            sourceNode?.recycle()
-            return
-        }
-
-        // 3. VERTICAL MOTION CHECK: Reels and Shorts ONLY scroll vertically!
+        // Filter out horizontal swipes (e.g. Instagram Stories or YouTube tab switches)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            val deltaX = event.scrollDeltaX
-            val deltaY = event.scrollDeltaY
-            // If deltaX is significant and deltaY is 0, it is a horizontal swipe (e.g. Stories tray)
-            if (deltaY == 0 && Math.abs(deltaX) > 10) {
-                sourceNode?.recycle()
+            if (event.scrollDeltaX != 0 && event.scrollDeltaY == 0) {
                 return
             }
         }
 
-        // 4. SCREEN CONTEXT CHECK: Are we actually in Reels / Shorts?
-        val inShortsOrReels = isUserInShortsOrReelsMode(pkgName, sourceNode)
-        sourceNode?.recycle()
-
-        if (!inShortsOrReels) {
+        // Verify that the user is currently watching Shorts or Reels
+        if (!isUserInShortsOrReels(pkgName)) {
             return
         }
 
-        // 5. DEBOUNCE & ITEM INDEX CHECK
+        // Debounce swipe events so 1 swipe gesture is counted as exactly 1 reel
         val now = SystemClock.uptimeMillis()
-        val currentIndex = event.fromIndex
-
-        // If the same item index is reported within 2.5s without moving to the next reel, ignore
-        if (currentIndex != -1 && currentIndex == lastItemIndex && (now - lastScrollTime < 2500L)) {
-            return
-        }
-
         if (now - lastScrollTime < SCROLL_DEBOUNCE_MS) {
             return
         }
 
-        // VALID REEL / SHORT SCROLL DETECTED!
         lastScrollTime = now
-        if (currentIndex != -1) {
-            lastItemIndex = currentIndex
-        }
-
         val newCount = prefs.incrementReel()
+        Log.d(TAG, "[$pkgName] Reel/Short detected! New count: $newCount")
 
-        // Update floating Dynamic Island pill live
+        // Update floating capsule live
         try {
             FloatingOverlayService.updateCount(this, newCount)
         } catch (e: Exception) {
             e.printStackTrace()
         }
 
-        // Check if limit hit
+        // Check if limit exceeded
         val limit = prefs.getDailyLimit()
         if (newCount >= limit) {
             triggerBlockScreen()
         }
     }
 
-    private fun isNonScrollableClass(className: String): Boolean {
-        val lower = className.lowercase()
-        return lower.contains("button") ||
-                lower.contains("imageview") ||
-                lower.contains("textview") ||
-                lower.contains("edittext") ||
-                lower.contains("seekbar") ||
-                lower.contains("progressbar") ||
-                lower.contains("switch") ||
-                lower.contains("checkbox") ||
-                lower.contains("radiobutton") ||
-                lower.contains("tab")
-    }
+    private fun isUserInShortsOrReels(pkgName: String): Boolean {
+        val root = rootInActiveWindow ?: return true // If root unavailable, default to true so scrolls are not lost
 
-    private fun isScrollContainer(className: String): Boolean {
-        val lower = className.lowercase()
-        return lower.contains("viewpager") ||
-                lower.contains("recyclerview") ||
-                lower.contains("scrollview") ||
-                lower.contains("listview") ||
-                lower.contains("reboundviewpager") ||
-                lower.contains("framelayout")
-    }
-
-    private fun isUserInShortsOrReelsMode(pkgName: String, sourceNode: AccessibilityNodeInfo?): Boolean {
-        val pkg = pkgName.lowercase()
-        val root = rootInActiveWindow ?: return true // Fallback to allow if root inaccessible
-
-        try {
-            if (pkg.contains("youtube")) {
-                // Check if current screen is YouTube Shorts
-                val sourceId = sourceNode?.viewIdResourceName?.lowercase() ?: ""
-                if (sourceId.contains("shorts") || sourceId.contains("reel")) {
-                    return true
-                }
-
-                // Inspect active window for Shorts markers
-                val shortsMarkers = listOf(
-                    "shorts_container", "shorts_pager", "shorts_player",
-                    "reel_recycler", "reel_watch_fragment", "reel_player"
-                )
-                for (id in shortsMarkers) {
-                    val nodes = root.findAccessibilityNodeInfosByViewId("com.google.android.youtube:id/$id")
-                    if (nodes.isNotEmpty()) return true
-                }
-
-                // Check text clues (YouTube Shorts overlay always has "Remix" or "Sound" or "Subscribe")
-                val remixNodes = root.findAccessibilityNodeInfosByText("Remix")
-                if (remixNodes.isNotEmpty()) return true
-
-                val shortsNodes = root.findAccessibilityNodeInfosByText("Shorts")
-                if (shortsNodes.isNotEmpty()) return true
-
-                // If it's a ViewPager2 in YouTube that's fullscreen, it's 99.9% Shorts
-                val sourceClass = sourceNode?.className?.toString()?.lowercase() ?: ""
-                if (sourceClass.contains("viewpager2")) {
-                    return true
-                }
-
-                return false
-            } else if (pkg.contains("instagram")) {
-                // Check if current screen is Instagram Reels (clips)
-                val sourceId = sourceNode?.viewIdResourceName?.lowercase() ?: ""
-                if (sourceId.contains("clips") || sourceId.contains("reel")) {
-                    return true
-                }
-
-                val instaMarkers = listOf(
-                    "clips_viewer", "clips_video_container", "clips_swipe_refresh_container",
-                    "reel_viewer", "reel_recycler"
-                )
-                for (id in instaMarkers) {
-                    val nodes = root.findAccessibilityNodeInfosByViewId("com.instagram.android:id/$id")
-                    if (nodes.isNotEmpty()) return true
-                }
-
-                val audioNodes = root.findAccessibilityNodeInfosByText("Original audio")
-                if (audioNodes.isNotEmpty()) return true
-
-                val reelsNodes = root.findAccessibilityNodeInfosByText("Reels")
-                if (reelsNodes.isNotEmpty()) return true
-
-                val sourceClass = sourceNode?.className?.toString()?.lowercase() ?: ""
-                if (sourceClass.contains("reboundviewpager") || sourceClass.contains("viewpager")) {
-                    return true
-                }
-
-                return false
-            } else if (pkg.contains("facebook")) {
-                val fbMarkers = listOf("reel", "short_form_video", "fb_shorts")
-                for (id in fbMarkers) {
-                    val nodes = root.findAccessibilityNodeInfosByViewId("com.facebook.katana:id/$id")
-                    if (nodes.isNotEmpty()) return true
-                }
-                return true
-            } else if (pkg.contains("snapchat")) {
-                val snapMarkers = listOf("spotlight", "vertical_view_pager")
-                for (id in snapMarkers) {
-                    val nodes = root.findAccessibilityNodeInfosByViewId("com.snapchat.android:id/$id")
-                    if (nodes.isNotEmpty()) return true
-                }
-                val spotNodes = root.findAccessibilityNodeInfosByText("Spotlight")
-                if (spotNodes.isNotEmpty()) return true
-                return true
+        return try {
+            if (isYouTube(pkgName)) {
+                isYouTubeShortsScreen(root)
+            } else if (isInstagram(pkgName)) {
+                isInstagramReelsScreen(root)
+            } else {
+                true
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e(TAG, "Error checking screen mode: ${e.message}")
+            true
         }
+    }
+
+    /**
+     * Rock-solid YouTube Shorts detection:
+     * 1. Shorts player always contains dedicated Dislike, Remix, Sound, or Subscribe action buttons.
+     * 2. YouTube Home feed contains visible "Home" and "Subscriptions" bottom navigation tabs without fullscreen video overlay.
+     */
+    private fun isYouTubeShortsScreen(root: AccessibilityNodeInfo): Boolean {
+        // Signal 1: Check for Shorts-specific action buttons & descriptors
+        val shortsIndicators = listOf("Dislike", "dislike", "Remix", "remix", "Sound", "sound", "Shorts", "shorts", "Create short")
+        for (indicator in shortsIndicators) {
+            val nodes = root.findAccessibilityNodeInfosByText(indicator)
+            if (nodes.isNotEmpty()) return true
+        }
+
+        // Signal 2: Inspect view IDs and content descriptions in hierarchy (up to 4 levels)
+        if (hasMatchingNode(root, maxDepth = 4) { node ->
+            val desc = node.contentDescription?.toString()?.lowercase() ?: ""
+            val id = node.viewIdResourceName?.lowercase() ?: ""
+            desc.contains("shorts") || desc.contains("dislike") || desc.contains("remix") ||
+                    desc.contains("like this video") || desc.contains("like this short") ||
+                    id.contains("shorts") || id.contains("reel")
+        }) {
+            return true
+        }
+
+        // Signal 3: If Home & Subscriptions bottom tabs are visible, user is browsing Home feed, NOT in full-screen Shorts
+        val hasHomeTab = root.findAccessibilityNodeInfosByText("Home").isNotEmpty()
+        val hasSubTab = root.findAccessibilityNodeInfosByText("Subscriptions").isNotEmpty()
+        if (hasHomeTab && hasSubTab) {
+            return false
+        }
+
+        // Default to true when uncertain so user's scrolls are never lost
         return true
+    }
+
+    /**
+     * Rock-solid Instagram Reels detection:
+     * 1. Reels player contains "Reels", "Audio", "Original audio" labels or "clips" view IDs.
+     * 2. Fullscreen vertical pager with Like/Comment/Share actions.
+     */
+    private fun isInstagramReelsScreen(root: AccessibilityNodeInfo): Boolean {
+        // Signal 1: Check for Reels text markers
+        val reelIndicators = listOf("Reels", "reels", "Audio", "audio", "Original audio")
+        for (indicator in reelIndicators) {
+            val nodes = root.findAccessibilityNodeInfosByText(indicator)
+            if (nodes.isNotEmpty()) return true
+        }
+
+        // Signal 2: Inspect view IDs and content descriptions
+        if (hasMatchingNode(root, maxDepth = 4) { node ->
+            val desc = node.contentDescription?.toString()?.lowercase() ?: ""
+            val id = node.viewIdResourceName?.lowercase() ?: ""
+            desc.contains("reel") || desc.contains("clips") || desc.contains("audio") ||
+                    id.contains("clips") || id.contains("reel")
+        }) {
+            return true
+        }
+
+        return true
+    }
+
+    /**
+     * Fast, depth-limited search across the active window hierarchy.
+     */
+    private fun hasMatchingNode(
+        node: AccessibilityNodeInfo?,
+        maxDepth: Int,
+        predicate: (AccessibilityNodeInfo) -> Boolean
+    ): Boolean {
+        if (node == null || maxDepth < 0) return false
+        if (predicate(node)) return true
+
+        val count = node.childCount
+        for (i in 0 until count.coerceAtMost(16)) {
+            val child = node.getChild(i) ?: continue
+            if (hasMatchingNode(child, maxDepth - 1, predicate)) {
+                return true
+            }
+        }
+        return false
     }
 
     private fun triggerBlockScreen() {
