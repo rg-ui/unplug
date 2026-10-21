@@ -110,12 +110,207 @@
   .proof .star { color: var(--electric); }
   .proof i { width: 3px; height: 3px; border-radius: 50%; background: var(--text-3); }
 
+  /* Interactive Phone Simulator */
   .phone {
     position: relative; width: min(300px, 78vw); aspect-ratio: 9 / 16; margin: 0 auto;
-    border-radius: 40px; padding: 8px; background: var(--surface-2);
-    box-shadow: 0 0 0 1px rgba(110, 231, 183, 0.12) inset, 0 40px 120px rgba(6, 95, 70, 0.35);
+    border-radius: 40px; padding: 8px; background: #071510;
+    box-shadow: 0 0 0 1.5px rgba(0, 245, 196, 0.22) inset, 0 30px 100px rgba(0, 245, 196, 0.15), 0 15px 40px rgba(0,0,0,0.8);
+    cursor: pointer;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
   }
-  .phone img { width: 100%; height: 100%; object-fit: cover; border-radius: 32px; background: var(--bg); }
+  .phone:hover {
+    box-shadow: 0 0 0 1.5px rgba(0, 245, 196, 0.4) inset, 0 35px 110px rgba(0, 245, 196, 0.22), 0 15px 40px rgba(0,0,0,0.8);
+  }
+  .phone-screen-wrap {
+    width: 100%; height: 100%; border-radius: 32px; overflow: hidden; background: var(--bg);
+    position: relative;
+    transition: transform 0.28s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  }
+  .phone-screen-wrap.swiping {
+    transform: translateY(-40px) scale(0.98);
+  }
+  .phone-screen-wrap img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* Live HUD Floating Pill */
+  .phone-hud {
+    position: absolute;
+    top: 13.5%;
+    left: 6%;
+    right: 6%;
+    background: rgba(3, 8, 6, 0.88);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 245, 196, 0.35);
+    border-radius: 999px;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.65), 0 0 14px rgba(0, 245, 196, 0.2);
+    z-index: 5;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .hud-mascot-box {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .hud-divider {
+    width: 1px;
+    height: 22px;
+    background: rgba(255, 255, 255, 0.15);
+  }
+  .hud-text {
+    flex: 1;
+    min-width: 0;
+  }
+  .hud-top {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    line-height: 1;
+  }
+  .hud-top b {
+    font-size: 19px;
+    font-weight: 800;
+    color: #FFFFFF;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.2s ease;
+  }
+  .hud-top b.bump {
+    transform: scale(1.35);
+    color: var(--mint);
+  }
+  .hud-top span {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-2);
+  }
+  .hud-sub {
+    display: block;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: rgba(240, 244, 248, 0.5);
+    margin-top: 3px;
+  }
+  .hud-badge {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    flex-shrink: 0;
+  }
+  .hud-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #00F5C4;
+    box-shadow: 0 0 8px #00F5C4;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  /* Blocker Screen inside Phone */
+  .phone-blocker {
+    position: absolute;
+    inset: 8px;
+    border-radius: 32px;
+    background: rgba(3, 8, 6, 0.94);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    z-index: 10;
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.92);
+    transition: opacity 0.3s var(--ease), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .phone-blocker.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
+  }
+  .blocker-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Tap Hint inside phone */
+  .tap-indicator {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(7, 21, 16, 0.85);
+    border: 1px solid rgba(0, 245, 196, 0.25);
+    color: var(--mint);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 999px;
+    z-index: 4;
+    pointer-events: none;
+    white-space: nowrap;
+    animation: tap-pulse 2s infinite ease-in-out;
+  }
+  @keyframes tap-pulse {
+    0%, 100% { opacity: 0.85; transform: translateX(-50%) scale(1); }
+    50% { opacity: 1; transform: translateX(-50%) scale(1.05); }
+  }
+
+  /* Button below phone */
+  .phone-action-bar {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+  }
+  .sim-scroll-btn {
+    background: rgba(7, 21, 16, 0.85);
+    border: 1px solid rgba(0, 245, 196, 0.3);
+    color: var(--text);
+    padding: 10px 20px;
+    border-radius: var(--pill);
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s var(--ease);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  }
+  .sim-scroll-btn:hover {
+    background: rgba(12, 30, 24, 0.95);
+    border-color: var(--mint);
+    color: var(--mint);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 245, 196, 0.2);
+  }
+  .sim-scroll-btn:active {
+    transform: translateY(1px);
+  }
+  .sim-scroll-btn svg {
+    color: var(--mint);
+    transition: transform 0.2s ease;
+  }
+  .sim-scroll-btn:hover svg {
+    transform: translateY(2px);
+  }
 
   /* Text left, phone right on desktop */
   @media (min-width: 900px) {
@@ -438,10 +633,56 @@
         <div class="phone-stage">
           <div class="peek" aria-hidden="true">
             <img src="static/site/mascot-waving.png" alt="" width="150" height="150">
-            <span class="bubble tail-left">Hey! I count your reels 🧠</span>
+            <span class="bubble tail-left" id="mascot-bubble">Hey! I count your reels 🧠</span>
           </div>
-          <div class="phone">
-            <img src="static/site/phone-screenshot.jpg" alt="Unplug counting reels on Instagram" loading="eager">
+          
+          <div class="phone" id="interactive-phone" title="Click to scroll next reel!">
+            <!-- Phone Screen Media -->
+            <div class="phone-screen-wrap" id="phone-screen-wrap">
+              <img src="static/site/phone-screenshot.jpg" id="phone-reel-img" alt="Unplug counting reels on Instagram" loading="eager">
+            </div>
+
+            <!-- Live Dynamic Island Floating Pill -->
+            <div class="phone-hud" id="phone-hud">
+              <div class="hud-mascot-box">
+                <img src="static/site/brain-0.png" id="hud-mascot-img" alt="Brain mascot" width="22" height="17">
+              </div>
+              <div class="hud-divider"></div>
+              <div class="hud-text">
+                <div class="hud-top">
+                  <b class="num" id="hud-count-val">47</b>
+                  <span>reels</span>
+                </div>
+                <span class="hud-sub">WATCHED TODAY</span>
+              </div>
+              <div class="hud-badge" id="hud-badge">
+                <span class="hud-dot" id="hud-dot"></span>
+                <span id="hud-dot-label">Healthy</span>
+              </div>
+            </div>
+
+            <!-- Feed Blocker Screen (Appears on Limit) -->
+            <div class="phone-blocker" id="phone-blocker">
+              <div class="blocker-inner">
+                <img src="static/site/brain-200.png" width="70" height="52" alt="">
+                <h3 style="color: #FF5252; font-size: 20px; font-weight: 800; margin-top: 10px;">Limit Reached!</h3>
+                <p style="font-size: 13px; color: var(--text-2); margin-top: 6px; line-height: 1.35;">You hit your daily limit of 50 reels.<br>Unplug blocked your feed.</p>
+                <button class="btn btn-small" id="btn-reset-sim" style="margin-top: 14px; font-size: 13px; height: 34px; padding: 0 16px;">Try Again ↺</button>
+              </div>
+            </div>
+
+            <!-- Tap hint badge at bottom of phone -->
+            <div class="tap-indicator" id="tap-indicator">
+              <span class="tap-icon">👆</span> Tap phone to scroll
+            </div>
+          </div>
+
+          <!-- Interactive control button below the phone -->
+          <div class="phone-action-bar">
+            <button class="sim-scroll-btn" id="btn-sim-scroll" type="button">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+              <span>Click to Scroll Reel (<span id="sim-clicks-left">3</span> left to block)</span>
+            </button>
           </div>
         </div>
       </div>
@@ -724,8 +965,126 @@
       }
     });
   });
-  const hero = document.querySelector('.hero');
-  if (hero) heroObserver.observe(hero);
+  // Interactive Phone Simulator Engine
+  let simCount = 47;
+  const simLimit = 50;
+  const phone = document.getElementById('interactive-phone');
+  const screenWrap = document.getElementById('phone-screen-wrap');
+  const hudCount = document.getElementById('hud-count-val');
+  const hudDot = document.getElementById('hud-dot');
+  const hudLabel = document.getElementById('hud-dot-label');
+  const hudMascot = document.getElementById('hud-mascot-img');
+  const mascotBubble = document.getElementById('mascot-bubble');
+  const blocker = document.getElementById('phone-blocker');
+  const btnScroll = document.getElementById('btn-sim-scroll');
+  const btnReset = document.getElementById('btn-reset-sim');
+  const clicksLeftSpan = document.getElementById('sim-clicks-left');
+
+  function updateSimulatorUI() {
+    if (!hudCount) return;
+    hudCount.textContent = simCount;
+    hudCount.classList.remove('bump');
+    void hudCount.offsetWidth;
+    hudCount.classList.add('bump');
+
+    const remaining = Math.max(0, simLimit - simCount);
+    if (clicksLeftSpan) {
+      clicksLeftSpan.textContent = remaining;
+    }
+
+    if (simCount <= 47) {
+      if (hudDot) {
+        hudDot.style.background = '#00F5C4';
+        hudDot.style.boxShadow = '0 0 8px #00F5C4';
+      }
+      if (hudLabel) {
+        hudLabel.textContent = 'Healthy';
+        hudLabel.style.color = '#00F5C4';
+      }
+      if (hudMascot) hudMascot.src = 'static/site/brain-0.png';
+      if (mascotBubble) mascotBubble.textContent = "Hey! I count your reels 🧠";
+      if (blocker) blocker.classList.remove('active');
+    } else if (simCount === 48) {
+      if (hudDot) {
+        hudDot.style.background = '#FBBF24';
+        hudDot.style.boxShadow = '0 0 8px #FBBF24';
+      }
+      if (hudLabel) {
+        hudLabel.textContent = 'Tired';
+        hudLabel.style.color = '#FBBF24';
+      }
+      if (hudMascot) hudMascot.src = 'static/site/brain-50.png';
+      if (mascotBubble) mascotBubble.textContent = "48 reels! Energy dropping... 👀";
+      if (blocker) blocker.classList.remove('active');
+    } else if (simCount === 49) {
+      if (hudDot) {
+        hudDot.style.background = '#FB923C';
+        hudDot.style.boxShadow = '0 0 8px #FB923C';
+      }
+      if (hudLabel) {
+        hudLabel.textContent = 'Exhausted';
+        hudLabel.style.color = '#FB923C';
+      }
+      if (hudMascot) hudMascot.src = 'static/site/brain-100.png';
+      if (mascotBubble) mascotBubble.textContent = "49 reels! Limit is 50 ⚠️";
+      if (blocker) blocker.classList.remove('active');
+    } else if (simCount >= simLimit) {
+      if (hudDot) {
+        hudDot.style.background = '#FF5252';
+        hudDot.style.boxShadow = '0 0 8px #FF5252';
+      }
+      if (hudLabel) {
+        hudLabel.textContent = 'Blocked';
+        hudLabel.style.color = '#FF5252';
+      }
+      if (hudMascot) hudMascot.src = 'static/site/brain-200.png';
+      if (mascotBubble) mascotBubble.textContent = "50 REELS! Feed blocked! 🛑";
+      setTimeout(() => {
+        if (blocker) blocker.classList.add('active');
+      }, 350);
+    }
+  }
+
+  function handleSimScroll() {
+    if (simCount >= simLimit) {
+      return;
+    }
+
+    // Trigger swipe motion
+    if (screenWrap) {
+      screenWrap.classList.add('swiping');
+      setTimeout(() => {
+        screenWrap.classList.remove('swiping');
+      }, 280);
+    }
+
+    simCount++;
+    updateSimulatorUI();
+  }
+
+  if (phone) {
+    phone.addEventListener('click', (e) => {
+      if (e.target && (e.target.id === 'btn-reset-sim' || e.target.closest('#btn-reset-sim'))) {
+        return;
+      }
+      handleSimScroll();
+    });
+  }
+
+  if (btnScroll) {
+    btnScroll.addEventListener('click', (e) => {
+      e.stopPropagation();
+      handleSimScroll();
+    });
+  }
+
+  if (btnReset) {
+    btnReset.addEventListener('click', (e) => {
+      e.stopPropagation();
+      simCount = 47;
+      updateSimulatorUI();
+    });
+  }
 })();
 </script>
 </body>
