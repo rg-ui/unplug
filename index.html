@@ -745,126 +745,231 @@
     border: 1px solid rgba(251, 191, 36, 0.25);
   }
 
-  /* How It Works (3-Step Setup Guide) */
-  .steps-section {
+  /* How It Works (Visual Setup Roadmap) */
+  .roadmap-section {
     position: relative;
-    padding: clamp(64px, 9vw, 110px) 0;
+    padding: clamp(68px, 9vw, 112px) 0;
     border-top: 1px solid var(--line);
+    background: radial-gradient(80% 50% at 50% 0%, rgba(0, 245, 196, 0.05), transparent 75%);
   }
-  .steps-header {
+  .roadmap-header {
     text-align: center;
-    max-width: 680px;
-    margin: 0 auto 52px;
+    max-width: 720px;
+    margin: 0 auto 56px;
   }
-  .steps-header .pill-badge {
+  .roadmap-header .pill-badge {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 7px;
     font-size: 11.5px;
     font-weight: 800;
     letter-spacing: 0.08em;
     color: var(--mint);
     background: rgba(0, 245, 196, 0.1);
-    border: 1px solid rgba(0, 245, 196, 0.25);
+    border: 1px solid rgba(0, 245, 196, 0.28);
     padding: 5px 14px;
     border-radius: 999px;
     margin-bottom: 14px;
   }
-  .steps-header h2 {
+  .roadmap-header .radar-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--mint);
+    box-shadow: 0 0 8px var(--mint);
+    animation: live-blink 1.4s infinite ease-in-out;
+  }
+  .roadmap-header h2 {
     margin-bottom: 14px;
   }
-  .steps-header p {
+  .roadmap-header p {
     color: var(--text-2);
     font-size: 17px;
     line-height: 1.5;
   }
-  .steps-grid {
+
+  /* Desktop Roadmap Track & Stations */
+  .roadmap-wrapper {
+    position: relative;
+    max-width: 1040px;
+    margin: 0 auto;
+  }
+  .roadmap-track {
+    display: none;
+  }
+  @media (min-width: 840px) {
+    .roadmap-track {
+      display: block;
+      position: absolute;
+      top: 32px;
+      left: 12%;
+      right: 12%;
+      height: 4px;
+      background: linear-gradient(90deg, #00F5C4 0%, #34D399 50%, #A3E635 100%);
+      box-shadow: 0 0 16px rgba(0, 245, 196, 0.45);
+      border-radius: 99px;
+      z-index: 1;
+      overflow: hidden;
+    }
+    .roadmap-track-pulse {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100px;
+      height: 100%;
+      background: #FFFFFF;
+      box-shadow: 0 0 12px #FFFFFF, 0 0 24px #00F5C4;
+      animation: track-beam 3s infinite linear;
+    }
+  }
+  @keyframes track-beam {
+    0% { transform: translateX(-100px); opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { transform: translateX(850px); opacity: 0; }
+  }
+
+  .roadmap-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-    gap: 24px;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    position: relative;
+    z-index: 2;
+  }
+  @media (min-width: 840px) {
+    .roadmap-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+  }
+
+  /* Milestone Node & Vertical Connector */
+  .roadmap-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     position: relative;
   }
-  .step-card {
+  .milestone-node-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .milestone-node {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #030806;
+    border: 3px solid #00F5C4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 24px rgba(0, 245, 196, 0.5), inset 0 0 12px rgba(0, 245, 196, 0.25);
+    position: relative;
+    z-index: 3;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+  }
+  .roadmap-col:hover .milestone-node {
+    transform: scale(1.1);
+    box-shadow: 0 0 32px rgba(0, 245, 196, 0.8), inset 0 0 16px rgba(0, 245, 196, 0.4);
+  }
+  .milestone-node b {
+    font-size: 20px;
+    font-weight: 800;
+    color: #FFFFFF;
+    letter-spacing: -0.02em;
+  }
+  .milestone-label {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    color: var(--mint);
+    background: rgba(0, 245, 196, 0.14);
+    border: 1px solid rgba(0, 245, 196, 0.3);
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin-top: 10px;
+  }
+  .node-connector-line {
+    width: 2px;
+    height: 18px;
+    background: linear-gradient(180deg, #00F5C4, rgba(0, 245, 196, 0.1));
+    margin-top: 4px;
+  }
+
+  /* Roadmap Station Card */
+  .roadmap-station-card {
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: var(--radius-m);
-    padding: 32px 24px;
+    padding: 28px 22px;
     display: flex;
     flex-direction: column;
+    width: 100%;
     position: relative;
     overflow: hidden;
     transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
   }
-  .step-card:hover {
-    transform: translateY(-5px);
-    border-color: rgba(0, 245, 196, 0.35);
+  .roadmap-station-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(0, 245, 196, 0.38);
     box-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.65), 0 0 24px rgba(0, 245, 196, 0.08);
   }
-  .step-card-glow {
+  .station-card-glow {
     position: absolute;
     top: 0;
     right: 0;
-    width: 140px;
-    height: 140px;
+    width: 130px;
+    height: 130px;
     background: radial-gradient(circle at top right, rgba(0, 245, 196, 0.12), transparent 70%);
     pointer-events: none;
   }
-  .step-top-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  }
-  .step-num-badge {
-    font-size: 13px;
+  .station-time-pill {
+    font-size: 10.5px;
     font-weight: 800;
     letter-spacing: 0.06em;
     color: var(--mint);
-    background: rgba(0, 245, 196, 0.12);
-    border: 1px solid rgba(0, 245, 196, 0.3);
-    padding: 4px 12px;
-    border-radius: 999px;
+    background: rgba(0, 245, 196, 0.1);
+    padding: 3px 8px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-bottom: 12px;
+    width: fit-content;
   }
-  .step-time-tag {
-    font-size: 11px;
-    color: var(--text-3);
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-  .step-card h3 {
-    font-size: 21px;
+  .roadmap-station-card h3 {
+    font-size: 20px;
     font-weight: 800;
-    margin-bottom: 10px;
-    letter-spacing: -0.01em;
+    margin-bottom: 8px;
     color: #fff;
+    letter-spacing: -0.01em;
   }
-  .step-card p {
+  .roadmap-station-card p {
     color: var(--text-2);
-    font-size: 15px;
+    font-size: 14.5px;
     line-height: 1.5;
-    margin-bottom: 24px;
+    margin-bottom: 22px;
     flex: 1;
   }
 
-  /* Step Interactive Visual Mockups */
+  /* Visual Mockups inside Station Cards */
   .step-visual {
     background: rgba(3, 8, 6, 0.75);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 16px;
-    padding: 16px;
+    border-radius: 14px;
+    padding: 14px;
     margin-top: auto;
   }
-
-  /* Step 1 Visual: Download File Card */
   .visual-apk {
     display: flex;
     align-items: center;
     gap: 12px;
   }
   .visual-apk-icon {
-    width: 44px;
-    height: 44px;
+    width: 42px;
+    height: 42px;
     border-radius: 12px;
     background: rgba(0, 245, 196, 0.1);
     border: 1px solid rgba(0, 245, 196, 0.25);
@@ -878,7 +983,7 @@
     min-width: 0;
   }
   .visual-apk-title {
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 700;
     color: #fff;
     display: flex;
@@ -886,7 +991,7 @@
     gap: 6px;
   }
   .visual-apk-sub {
-    font-size: 11px;
+    font-size: 10.5px;
     color: var(--text-3);
     margin-top: 2px;
   }
@@ -894,33 +999,32 @@
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    font-size: 9.5px;
+    font-size: 9px;
     font-weight: 700;
     color: var(--mint);
     background: rgba(0, 245, 196, 0.15);
-    padding: 2px 7px;
+    padding: 2px 6px;
     border-radius: 4px;
-    margin-top: 5px;
+    margin-top: 4px;
   }
 
-  /* Step 2 Visual: Android Settings Toggle */
+  /* Switch Mockup */
   .visual-toggle-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: 10px;
   }
   .visual-toggle-info {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
   }
   .visual-toggle-icon {
-    width: 34px;
-    height: 34px;
-    border-radius: 10px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
     background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -929,30 +1033,30 @@
   }
   .visual-toggle-text b {
     display: block;
-    font-size: 12.5px;
+    font-size: 12px;
     color: #fff;
     font-weight: 700;
   }
   .visual-toggle-text span {
     display: block;
-    font-size: 10.5px;
+    font-size: 10px;
     color: var(--text-3);
     margin-top: 1px;
   }
   .switch-mockup {
-    width: 48px;
-    height: 26px;
+    width: 46px;
+    height: 25px;
     background: #00F5C4;
     border-radius: 999px;
     position: relative;
     cursor: pointer;
-    box-shadow: 0 0 14px rgba(0, 245, 196, 0.45);
+    box-shadow: 0 0 12px rgba(0, 245, 196, 0.45);
     flex-shrink: 0;
     transition: background 0.25s ease, box-shadow 0.25s ease;
   }
   .switch-thumb {
-    width: 20px;
-    height: 20px;
+    width: 19px;
+    height: 19px;
     background: #020604;
     border-radius: 50%;
     position: absolute;
@@ -965,23 +1069,22 @@
     box-shadow: none;
   }
   .switch-mockup.off .switch-thumb {
-    transform: translateX(-22px);
+    transform: translateX(-21px);
     background: #fff;
   }
   .visual-toggle-subtext {
-    font-size: 10px;
+    font-size: 9.5px;
     color: var(--mint);
-    margin-top: 10px;
+    margin-top: 8px;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
     background: rgba(0, 245, 196, 0.08);
-    padding: 5px 8px;
+    padding: 4px 7px;
     border-radius: 6px;
-    border: 1px solid rgba(0, 245, 196, 0.15);
   }
 
-  /* Step 3 Visual: Daily Limit Pill & Slider */
+  /* Limit Mockup */
   .visual-limit-box {
     display: flex;
     flex-direction: column;
@@ -993,18 +1096,17 @@
     justify-content: space-between;
   }
   .visual-limit-label {
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: 700;
     color: #fff;
   }
   .visual-limit-val {
-    font-size: 12.5px;
+    font-size: 12px;
     font-weight: 800;
     color: var(--mint);
     background: rgba(0, 245, 196, 0.12);
-    border: 1px solid rgba(0, 245, 196, 0.25);
-    padding: 2px 8px;
-    border-radius: 6px;
+    padding: 2px 7px;
+    border-radius: 5px;
   }
   .visual-limit-track {
     width: 100%;
@@ -1012,7 +1114,6 @@
     border-radius: 99px;
     background: rgba(255, 255, 255, 0.1);
     overflow: hidden;
-    position: relative;
   }
   .visual-limit-fill {
     width: 50%;
@@ -1024,8 +1125,56 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 10px;
+    font-size: 9.5px;
     color: var(--text-3);
+  }
+
+  /* Roadmap Destination Bar */
+  .roadmap-destination {
+    margin-top: 48px;
+    background: rgba(7, 21, 16, 0.85);
+    border: 1px solid rgba(0, 245, 196, 0.35);
+    border-radius: var(--radius-m);
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 245, 196, 0.1);
+  }
+  @media (max-width: 680px) {
+    .roadmap-destination {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+  .destination-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .destination-flag {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(0, 245, 196, 0.15);
+    border: 1px solid rgba(0, 245, 196, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .destination-text b {
+    display: block;
+    font-size: 16px;
+    color: #fff;
+    font-weight: 800;
+  }
+  .destination-text span {
+    display: block;
+    font-size: 13px;
+    color: var(--text-2);
     margin-top: 2px;
   }
 
@@ -1215,105 +1364,145 @@
     </div>
   </section>
 
-  <!-- How It Works (3-Step Setup Guide) -->
-  <section class="steps-section" id="how-it-works">
+  <!-- How It Works (Visual Setup Roadmap) -->
+  <section class="roadmap-section" id="how-it-works">
     <div class="wrap">
-      <div class="steps-header">
-        <span class="pill-badge reveal">⚡ 30-SECOND SETUP</span>
-        <h2 class="reveal" style="--d:60ms">How Unplug Works.</h2>
-        <p class="reveal" style="--d:120ms">Zero complicated setup. No login, no cloud sync, and 100% on-device privacy from day one.</p>
+      <div class="roadmap-header">
+        <span class="pill-badge reveal"><span class="radar-dot"></span> 3-STEP SETUP ROADMAP</span>
+        <h2 class="reveal" style="--d:60ms">Your 30-Second Journey to Freedom.</h2>
+        <p class="reveal" style="--d:120ms">Follow the path. From download to mindful scrolling in 3 simple checkpoints.</p>
       </div>
 
-      <div class="steps-grid">
-        <!-- Step 1 -->
-        <div class="step-card reveal" style="--d:60ms">
-          <div class="step-card-glow"></div>
-          <div class="step-top-row">
-            <span class="step-num-badge">STEP 01</span>
-            <span class="step-time-tag">Takes 5 sec</span>
-          </div>
-          <h3>Install Unplug APK</h3>
-          <p>Download the official APK directly. No account creation, email sign-in, or invasive background telemetry.</p>
-          
-          <div class="step-visual">
-            <div class="visual-apk">
-              <div class="visual-apk-icon">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
+      <div class="roadmap-wrapper">
+        <!-- Continuous Glowing Highway Track -->
+        <div class="roadmap-track" aria-hidden="true">
+          <div class="roadmap-track-pulse"></div>
+        </div>
+
+        <div class="roadmap-grid">
+          <!-- Milestone 1 -->
+          <div class="roadmap-col reveal" style="--d:60ms">
+            <div class="milestone-node-wrap">
+              <div class="milestone-node">
+                <b>01</b>
               </div>
-              <div class="visual-apk-info">
-                <div class="visual-apk-title">
-                  <span>unplug-v1.0.1.apk</span>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="#00F5C4"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+              <span class="milestone-label">CHECKPOINT 1</span>
+              <div class="node-connector-line"></div>
+            </div>
+
+            <div class="roadmap-station-card">
+              <div class="station-card-glow"></div>
+              <span class="station-time-pill">⏱️ 5 SECONDS</span>
+              <h3>Download APK</h3>
+              <p>Grab the official APK directly. Zero account creation, email sign-in, or background tracking.</p>
+
+              <div class="step-visual">
+                <div class="visual-apk">
+                  <div class="visual-apk-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="7 10 12 15 17 10"></polyline>
+                      <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                  </div>
+                  <div class="visual-apk-info">
+                    <div class="visual-apk-title">
+                      <span>unplug-v1.0.1.apk</span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="#00F5C4"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    </div>
+                    <div class="visual-apk-sub">24.8 MB • Android 8.0+</div>
+                    <div class="visual-apk-badge">✓ Verified Clean &amp; Open</div>
+                  </div>
                 </div>
-                <div class="visual-apk-sub">24.8 MB • Android 8.0+</div>
-                <div class="visual-apk-badge">✓ Verified Clean &amp; Open</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Milestone 2 -->
+          <div class="roadmap-col reveal" style="--d:120ms">
+            <div class="milestone-node-wrap">
+              <div class="milestone-node">
+                <b>02</b>
+              </div>
+              <span class="milestone-label">CHECKPOINT 2</span>
+              <div class="node-connector-line"></div>
+            </div>
+
+            <div class="roadmap-station-card">
+              <div class="station-card-glow"></div>
+              <span class="station-time-pill">⏱️ 10 SECONDS</span>
+              <h3>Enable Accessibility</h3>
+              <p>Toggle the Unplug Service in Android Settings to count vertical scroll gestures without video recording.</p>
+
+              <div class="step-visual">
+                <div class="visual-toggle-row">
+                  <div class="visual-toggle-info">
+                    <div class="visual-toggle-icon">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    </div>
+                    <div class="visual-toggle-text">
+                      <b>Unplug Reel Service</b>
+                      <span id="service-status-text">Active &amp; Monitoring</span>
+                    </div>
+                  </div>
+                  <div class="switch-mockup" id="demo-switch" title="Click to test toggle">
+                    <div class="switch-thumb"></div>
+                  </div>
+                </div>
+                <div class="visual-toggle-subtext">
+                  <span>🛡️</span>
+                  <span>100% On-Device • Zero video recording</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Milestone 3 -->
+          <div class="roadmap-col reveal" style="--d:180ms">
+            <div class="milestone-node-wrap">
+              <div class="milestone-node">
+                <b>03</b>
+              </div>
+              <span class="milestone-label">CHECKPOINT 3</span>
+              <div class="node-connector-line"></div>
+            </div>
+
+            <div class="roadmap-station-card">
+              <div class="station-card-glow"></div>
+              <span class="station-time-pill">⏱️ INSTANT PEACE</span>
+              <h3>Set Cap &amp; Focus</h3>
+              <p>Set your daily limit (e.g. 50 reels). Watch the live HUD pill, and let Unplug pause your feed on limit.</p>
+
+              <div class="step-visual">
+                <div class="visual-limit-box">
+                  <div class="visual-limit-top">
+                    <span class="visual-limit-label">Daily Reel Limit</span>
+                    <span class="visual-limit-val">50 Reels / Day</span>
+                  </div>
+                  <div class="visual-limit-track">
+                    <div class="visual-limit-fill"></div>
+                  </div>
+                  <div class="visual-limit-footer">
+                    <span>0 (Start)</span>
+                    <span style="color:var(--mint); font-weight:700;">47 Watched</span>
+                    <span>50 (Block)</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Step 2 -->
-        <div class="step-card reveal" style="--d:120ms">
-          <div class="step-card-glow"></div>
-          <div class="step-top-row">
-            <span class="step-num-badge">STEP 02</span>
-            <span class="step-time-tag">Takes 10 sec</span>
-          </div>
-          <h3>Enable Accessibility</h3>
-          <p>Toggle the Unplug Service in Android Settings. This allows Unplug to count vertical scroll swipes without recording screen or video.</p>
-          
-          <div class="step-visual">
-            <div class="visual-toggle-row">
-              <div class="visual-toggle-info">
-                <div class="visual-toggle-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-                </div>
-                <div class="visual-toggle-text">
-                  <b>Unplug Reel Service</b>
-                  <span id="service-status-text">Active &amp; Monitoring</span>
-                </div>
-              </div>
-              <div class="switch-mockup" id="demo-switch" title="Click to test toggle">
-                <div class="switch-thumb"></div>
-              </div>
-            </div>
-            <div class="visual-toggle-subtext">
-              <span>🛡️</span>
-              <span>100% On-Device • Zero video or audio data accessed</span>
+        <!-- Destination Goal Banner -->
+        <div class="roadmap-destination reveal" style="--d:220ms">
+          <div class="destination-info">
+            <div class="destination-flag">🏁</div>
+            <div class="destination-text">
+              <b>Destination Reached: 730+ Hours Saved Every Year</b>
+              <span>Protect your brain, boost focus, and never lose an evening to doomscrolling again.</span>
             </div>
           </div>
-        </div>
-
-        <!-- Step 3 -->
-        <div class="step-card reveal" style="--d:180ms">
-          <div class="step-card-glow"></div>
-          <div class="step-top-row">
-            <span class="step-num-badge">STEP 03</span>
-            <span class="step-time-tag">Instant Peace</span>
-          </div>
-          <h3>Set Cap &amp; Scroll Mindfully</h3>
-          <p>Choose your daily limit (e.g., 50 reels). Watch the floating HUD keep you aware, or let Unplug halt your feed when you're done.</p>
-          
-          <div class="step-visual">
-            <div class="visual-limit-box">
-              <div class="visual-limit-top">
-                <span class="visual-limit-label">Daily Reel Limit</span>
-                <span class="visual-limit-val">50 Reels / Day</span>
-              </div>
-              <div class="visual-limit-track">
-                <div class="visual-limit-fill"></div>
-              </div>
-              <div class="visual-limit-footer">
-                <span>0 (Start)</span>
-                <span style="color:var(--mint); font-weight:700;">47 Watched</span>
-                <span>50 (Block)</span>
-              </div>
-            </div>
-          </div>
+          <a class="btn btn-small" href="unplug.apk" download id="roadmap-download-cta">Download APK (v1.0.1)</a>
         </div>
       </div>
     </div>
