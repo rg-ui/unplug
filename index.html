@@ -464,73 +464,6 @@
     z-index: 18;
   }
 
-  /* Action Bar Below Phone */
-  .phone-action-bar {
-    margin-top: 18px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-  }
-  .auto-play-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--mint);
-    background: rgba(7, 21, 16, 0.7);
-    padding: 4px 12px;
-    border-radius: 999px;
-    border: 1px solid rgba(0, 245, 196, 0.2);
-  }
-  .live-pulse {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--mint);
-    box-shadow: 0 0 8px var(--mint);
-    animation: live-blink 1.4s infinite ease-in-out;
-  }
-  @keyframes live-blink {
-    0%, 100% { opacity: 0.4; transform: scale(0.85); }
-    50% { opacity: 1; transform: scale(1.25); }
-  }
-
-  .sim-scroll-btn {
-    background: rgba(7, 21, 16, 0.9);
-    border: 1px solid rgba(0, 245, 196, 0.35);
-    color: var(--text);
-    padding: 9px 18px;
-    border-radius: var(--pill);
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.2s var(--ease);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.5);
-  }
-  .sim-scroll-btn:hover {
-    background: rgba(12, 30, 24, 0.95);
-    border-color: var(--mint);
-    color: var(--mint);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 245, 196, 0.25);
-  }
-  .sim-scroll-btn:active {
-    transform: translateY(1px);
-  }
-  .sim-scroll-btn svg {
-    color: var(--mint);
-    transition: transform 0.2s ease;
-  }
-  .sim-scroll-btn:hover svg {
-    transform: translateY(2px);
-  }
-
   /* Text left, phone right on desktop */
   @media (min-width: 900px) {
     .hero-2 .wrap { grid-template-columns: 1.1fr 0.9fr; }
@@ -945,18 +878,6 @@
                 <button class="btn btn-small" id="btn-reset-sim" style="margin-top: 12px; font-size: 12px; height: 32px; padding: 0 14px;">Replay Now ↺</button>
               </div>
             </div>
-          </div>
-
-          <!-- Interactive control button & Auto-demo status below phone -->
-          <div class="phone-action-bar">
-            <div class="auto-play-badge">
-              <span class="live-pulse"></span>
-              <span>Auto Simulator Active</span>
-            </div>
-            <button class="sim-scroll-btn" id="btn-sim-scroll" type="button" aria-label="Tap to swipe next reel">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-              <span>Tap to Swipe Reel (<span id="sim-clicks-left">3</span> left to block)</span>
-            </button>
           </div>
         </div>
       </div>
