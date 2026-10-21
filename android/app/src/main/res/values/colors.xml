@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand Obsidian Emerald Palette -->
+    <color name="black">#030806</color>
+    <color name="surface_dark">#071510</color>
+    
+    <!-- Brand Mint & Cyan Accents -->
+    <color name="accent_mint">#00F5C4</color>
+    <color name="accent_mint_dark">#05C46B</color>
+    <color name="accent_green">#00F5C4</color>
+    <color name="accent_cyan">#00F5C4</color>
+    
+    <!-- Glassmorphism Tokens -->
+    <color name="glass_surface">#E6071510</color>
+    <color name="glass_card">#CC0B1D16</color>
+    <color name="glass_card_hover">#E60F251D</color>
+    <color name="glass_border">#2E00F5C4</color>
+    <color name="glass_border_subtle">#1400F5C4</color>
+    <color name="glass_highlight">#2600F5C4</color>
+    
+    <!-- Dynamic Island Pill -->
+    <color name="dynamic_island_bg">#F2030806</color>
+    <color name="dynamic_island_border">#4D00F5C4</color>
+    
+    <!-- Typography -->
+    <color name="white">#FFFFFF</color>
+    <color name="text_secondary">#94A3B8</color>
+    <color name="text_muted">#64748B</color>
+    <color name="line">#0E261D</color>
+    
+    <!-- iOS / Apple Vibrant Accents -->
+    <color name="ios_green">#00F5C4</color>
+    <color name="ios_cyan">#00F5C4</color>
+    <color name="ios_blue">#0A84FF</color>
+    <color name="ios_indigo">#5E5CE6</color>
+    <color name="ios_purple">#BF5AF2</color>
+    <color name="ios_pink">#FF375F</color>
+    <color name="ios_orange">#FF9F0A</color>
+    <color name="ios_red">#FF453A</color>
+    
+    <!-- Mapped Accents -->
+    <color name="accent_purple">#BF5AF2</color>
+    <color name="accent_pink">#FF375F</color>
+    <color name="accent_red">#FF453A</color>
+    <color name="accent_amber">#FF9F0A</color>
+</resources>

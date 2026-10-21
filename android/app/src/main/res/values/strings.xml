@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Unplug</string>
+    <string name="accessibility_service_label">Unplug Reel Counter &amp; Blocker</string>
+    <string name="accessibility_service_description">Tracks your scroll gestures inside Instagram Reels, YouTube Shorts, Snapchat and Facebook to help you break screen addiction and protect your brain.</string>
+</resources>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <!-- Center Apple Frosted Glass Card -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_glass_card"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="36dp">
+
+        <!-- Pleading / Exhausted Mascot -->
+        <ImageView
+            android:id="@+id/imgBlockMascot"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_marginBottom="20dp"
+            android:contentDescription="Exhausted Brain"
+            android:scaleType="centerCrop"
+            android:src="@drawable/brain_exhausted" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-black"
+            android:letterSpacing="-0.03"
+            android:text="Reel Limit Reached"
+            android:textColor="@color/ios_red"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvBlockSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:lineSpacingExtra="3dp"
+            android:text="You've reached your scroll limit for today.\nGive your brain some rest!"
+            android:textColor="@color/text_secondary"
+            android:textSize="15sp" />
+
+        <!-- Count Badge -->
+        <TextView
+            android:id="@+id/tvBlockCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_glass_btn_secondary"
+            android:fontFamily="sans-serif-bold"
+            android:paddingHorizontal="18dp"
+            android:paddingVertical="8dp"
+            android:text="50 Reels Watched"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+
+        <!-- Primary Action Button -->
+        <Button
+            android:id="@+id/btnExitApp"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/bg_glass_btn_primary"
+            android:fontFamily="sans-serif-bold"
+            android:text="Close App &amp; Take a Break"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+
+        <!-- Emergency Snooze -->
+        <TextView
+            android:id="@+id/btnSnooze"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="sans-serif-medium"
+            android:padding="8dp"
+            android:text="Emergency: 5 More Minutes"
+            android:textColor="@color/text_muted"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

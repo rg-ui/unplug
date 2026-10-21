@@ -1,0 +1,22 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Android / Gradle
+.gradle/
+**/build/
+android/.gradle/
+android/app/build/
+android/local.properties
+android/gradle-8.7/
+android/gradle-8.7-bin.zip
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+
+# Build outputs (excluding root release apk)
+*.apk.idsig
