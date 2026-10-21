@@ -110,52 +110,221 @@
   .proof .star { color: var(--electric); }
   .proof i { width: 3px; height: 3px; border-radius: 50%; background: var(--text-3); }
 
-  /* Interactive Phone Simulator */
+  /* Realistic Titanium Phone Mockup */
   .phone {
-    position: relative; width: min(300px, 78vw); aspect-ratio: 9 / 16; margin: 0 auto;
-    border-radius: 40px; padding: 8px; background: #071510;
-    box-shadow: 0 0 0 1.5px rgba(0, 245, 196, 0.22) inset, 0 30px 100px rgba(0, 245, 196, 0.15), 0 15px 40px rgba(0,0,0,0.8);
+    position: relative;
+    width: min(305px, 78vw);
+    aspect-ratio: 9 / 18.5;
+    margin: 0 auto;
+    border-radius: 48px;
+    padding: 10px;
+    background: linear-gradient(145deg, #182820 0%, #08110d 45%, #15241c 100%);
+    box-shadow: 
+      0 0 0 1px rgba(0, 245, 196, 0.28) inset,
+      0 0 0 3px rgba(3, 8, 6, 0.9) inset,
+      0 30px 90px rgba(0, 0, 0, 0.85),
+      0 0 45px rgba(0, 245, 196, 0.14);
     cursor: pointer;
     overflow: hidden;
     user-select: none;
     -webkit-user-select: none;
-    transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+    transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
   }
   .phone:hover {
-    box-shadow: 0 0 0 1.5px rgba(0, 245, 196, 0.4) inset, 0 35px 110px rgba(0, 245, 196, 0.22), 0 15px 40px rgba(0,0,0,0.8);
+    transform: translateY(-2px);
+    box-shadow: 
+      0 0 0 1px rgba(0, 245, 196, 0.42) inset,
+      0 0 0 3px rgba(3, 8, 6, 0.9) inset,
+      0 35px 100px rgba(0, 0, 0, 0.9),
+      0 0 55px rgba(0, 245, 196, 0.22);
   }
-  .phone-screen-wrap {
-    width: 100%; height: 100%; border-radius: 32px; overflow: hidden; background: var(--bg);
-    position: relative;
-    transition: transform 0.28s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-  }
-  .phone-screen-wrap.swiping {
-    transform: translateY(-40px) scale(0.98);
-  }
-  .phone-screen-wrap img { width: 100%; height: 100%; object-fit: cover; }
 
-  /* Live HUD Floating Pill */
-  .phone-hud {
+  /* Physical Side Buttons (Left Volume, Right Power) */
+  .phone::before {
+    content: "";
     position: absolute;
-    top: 13.5%;
-    left: 6%;
-    right: 6%;
-    background: rgba(3, 8, 6, 0.88);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(0, 245, 196, 0.35);
-    border-radius: 999px;
-    padding: 8px 14px;
+    left: -2px;
+    top: 110px;
+    width: 3px;
+    height: 48px;
+    background: #00F5C4;
+    border-radius: 2px 0 0 2px;
+    opacity: 0.35;
+  }
+  .phone::after {
+    content: "";
+    position: absolute;
+    right: -2px;
+    top: 130px;
+    width: 3px;
+    height: 38px;
+    background: #00F5C4;
+    border-radius: 0 2px 2px 0;
+    opacity: 0.35;
+  }
+
+  /* Dynamic Island Notch */
+  .phone-dynamic-island {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 82px;
+    height: 20px;
+    background: #020604;
+    border-radius: 20px;
+    z-index: 20;
     display: flex;
     align-items: center;
-    gap: 10px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.65), 0 0 14px rgba(0, 245, 196, 0.2);
-    z-index: 5;
+    justify-content: flex-end;
+    padding-right: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+  }
+  .phone-camera {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #0a1b14;
+    box-shadow: inset 0 0 2px #00F5C4;
+  }
+
+  /* Phone Screen Viewport */
+  .phone-screen-wrap {
+    width: 100%;
+    height: 100%;
+    border-radius: 38px;
+    overflow: hidden;
+    background: #000000;
+    position: relative;
+  }
+
+  /* Vertical Reel Track */
+  .reel-track {
+    width: 100%;
+    height: 300%;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+  }
+  .reel-slide {
+    width: 100%;
+    height: 33.3333%;
+    position: relative;
+    overflow: hidden;
+    background: #000;
+  }
+  .reel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Simulated Reel Instagram UI Overlay */
+  .reel-overlay-ui {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px 14px 28px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, transparent 40%, rgba(0,0,0,0.75) 100%);
+  }
+  .reel-user-tag {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .user-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  }
+  .reel-user-tag b {
+    font-size: 13px;
+    color: #fff;
+    font-weight: 700;
+  }
+  .follow-pill {
+    font-size: 10px;
+    padding: 2px 7px;
+    border: 1px solid rgba(255,255,255,0.6);
+    border-radius: 12px;
+    color: #fff;
+    font-weight: 600;
+  }
+  .reel-caption {
+    font-size: 11px;
+    color: rgba(255,255,255,0.9);
+    line-height: 1.3;
+    max-width: 82%;
+    margin-bottom: 8px;
+  }
+  .reel-audio-bar {
+    font-size: 9.5px;
+    color: rgba(255,255,255,0.75);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .reel-actions {
+    position: absolute;
+    right: 10px;
+    bottom: 35px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  .action-btn .icon {
+    font-size: 18px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+  }
+  .action-btn .count {
+    font-size: 9px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  /* Live Floating HUD Capsule (Unplug Dynamic Island) */
+  .phone-hud {
+    position: absolute;
+    top: 48px;
+    left: 10px;
+    right: 10px;
+    background: rgba(3, 8, 6, 0.88);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(0, 245, 196, 0.45);
+    border-radius: 999px;
+    padding: 7px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7), 0 0 16px rgba(0, 245, 196, 0.25);
+    z-index: 15;
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .hud-mascot-box {
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -163,7 +332,7 @@
   }
   .hud-divider {
     width: 1px;
-    height: 22px;
+    height: 20px;
     background: rgba(255, 255, 255, 0.15);
   }
   .hud-text {
@@ -177,7 +346,7 @@
     line-height: 1;
   }
   .hud-top b {
-    font-size: 19px;
+    font-size: 18px;
     font-weight: 800;
     color: #FFFFFF;
     transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.2s ease;
@@ -197,7 +366,7 @@
     font-weight: 700;
     letter-spacing: 0.08em;
     color: rgba(240, 244, 248, 0.5);
-    margin-top: 3px;
+    margin-top: 2px;
   }
   .hud-badge {
     display: flex;
@@ -205,7 +374,7 @@
     gap: 5px;
     font-size: 10px;
     font-weight: 700;
-    padding: 4px 8px;
+    padding: 3px 8px;
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.08);
     flex-shrink: 0;
@@ -219,24 +388,25 @@
     transition: background 0.3s ease, box-shadow 0.3s ease;
   }
 
-  /* Blocker Screen inside Phone */
+  /* Frosted Blocker Sheet */
   .phone-blocker {
     position: absolute;
-    inset: 8px;
-    border-radius: 32px;
-    background: rgba(3, 8, 6, 0.94);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
+    inset: 10px;
+    border-radius: 38px;
+    background: rgba(3, 8, 6, 0.88);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1px solid rgba(255, 82, 82, 0.35);
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 20px;
-    z-index: 10;
+    padding: 24px 16px;
+    z-index: 25;
     opacity: 0;
     pointer-events: none;
     transform: scale(0.92);
-    transition: opacity 0.3s var(--ease), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 0.35s var(--ease), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .phone-blocker.active {
     opacity: 1;
@@ -247,59 +417,108 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
+  }
+  .blocker-pill-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: rgba(255, 82, 82, 0.16);
+    color: #FF5252;
+    border: 1px solid rgba(255, 82, 82, 0.3);
+    margin-top: 10px;
+  }
+  .blocker-progress-bar {
+    width: 140px;
+    height: 4px;
+    border-radius: 99px;
+    background: rgba(255, 255, 255, 0.1);
+    margin-top: 14px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--mint);
+    transition: width 3.2s linear;
+  }
+  .progress-fill.running {
+    width: 100%;
+  }
+  .blocker-countdown {
+    font-size: 10px;
+    color: var(--text-3);
+    margin-top: 6px;
   }
 
-  /* Tap Hint inside phone */
-  .tap-indicator {
+  /* Glass Glare */
+  .phone-screen-glare {
     position: absolute;
-    bottom: 12px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(7, 21, 16, 0.85);
-    border: 1px solid rgba(0, 245, 196, 0.25);
-    color: var(--mint);
+    inset: 0;
+    border-radius: 38px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.01) 40%, transparent 60%);
+    pointer-events: none;
+    z-index: 18;
+  }
+
+  /* Action Bar Below Phone */
+  .phone-action-bar {
+    margin-top: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .auto-play-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     font-size: 11px;
     font-weight: 700;
-    padding: 6px 14px;
+    color: var(--mint);
+    background: rgba(7, 21, 16, 0.7);
+    padding: 4px 12px;
     border-radius: 999px;
-    z-index: 4;
-    pointer-events: none;
-    white-space: nowrap;
-    animation: tap-pulse 2s infinite ease-in-out;
+    border: 1px solid rgba(0, 245, 196, 0.2);
   }
-  @keyframes tap-pulse {
-    0%, 100% { opacity: 0.85; transform: translateX(-50%) scale(1); }
-    50% { opacity: 1; transform: translateX(-50%) scale(1.05); }
+  .live-pulse {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--mint);
+    box-shadow: 0 0 8px var(--mint);
+    animation: live-blink 1.4s infinite ease-in-out;
+  }
+  @keyframes live-blink {
+    0%, 100% { opacity: 0.4; transform: scale(0.85); }
+    50% { opacity: 1; transform: scale(1.25); }
   }
 
-  /* Button below phone */
-  .phone-action-bar {
-    margin-top: 16px;
-    display: flex;
-    justify-content: center;
-  }
   .sim-scroll-btn {
-    background: rgba(7, 21, 16, 0.85);
-    border: 1px solid rgba(0, 245, 196, 0.3);
+    background: rgba(7, 21, 16, 0.9);
+    border: 1px solid rgba(0, 245, 196, 0.35);
     color: var(--text);
-    padding: 10px 20px;
+    padding: 9px 18px;
     border-radius: var(--pill);
     font-family: inherit;
-    font-size: 13.5px;
+    font-size: 13px;
     font-weight: 700;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     gap: 8px;
     transition: all 0.2s var(--ease);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.5);
   }
   .sim-scroll-btn:hover {
     background: rgba(12, 30, 24, 0.95);
     border-color: var(--mint);
     color: var(--mint);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 245, 196, 0.2);
+    box-shadow: 0 6px 20px rgba(0, 245, 196, 0.25);
   }
   .sim-scroll-btn:active {
     transform: translateY(1px);
@@ -636,10 +855,61 @@
             <span class="bubble tail-left" id="mascot-bubble">Hey! I count your reels 🧠</span>
           </div>
           
-          <div class="phone" id="interactive-phone" title="Click to scroll next reel!">
-            <!-- Phone Screen Media -->
+          <div class="phone" id="interactive-phone" title="Click or tap to swipe reel!">
+            <!-- Dynamic Island Notch & Camera -->
+            <div class="phone-dynamic-island">
+              <div class="phone-camera"></div>
+            </div>
+
+            <!-- Phone Screen Viewport with Vertical Reel Track -->
             <div class="phone-screen-wrap" id="phone-screen-wrap">
-              <img src="static/site/phone-screenshot.jpg" id="phone-reel-img" alt="Unplug counting reels on Instagram" loading="eager">
+              <div class="reel-track" id="reel-track">
+                <!-- Slide 1: Original App Screenshot Reel -->
+                <div class="reel-slide">
+                  <img src="static/site/phone-screenshot.jpg" alt="Reel 1" loading="eager">
+                </div>
+
+                <!-- Slide 2: Sunset Travel Reel -->
+                <div class="reel-slide">
+                  <img src="static/site/reel-2.jpg" alt="Reel 2" loading="eager">
+                  <div class="reel-overlay-ui">
+                    <div class="reel-user-tag">
+                      <span class="user-avatar" style="background:#f43f5e;">✈️</span>
+                      <b>@wanderlust_diaries</b>
+                      <span class="follow-pill">Follow</span>
+                    </div>
+                    <div class="reel-caption">Golden hour in Amalfi coast hits different 🌅✨ #travel #sunset #italy</div>
+                    <div class="reel-audio-bar">🎵 Original audio — wanderlust_diaries</div>
+                    <div class="reel-actions">
+                      <div class="action-btn"><span class="icon">❤️</span><span class="count">248K</span></div>
+                      <div class="action-btn"><span class="icon">💬</span><span class="count">1,829</span></div>
+                      <div class="action-btn"><span class="icon">↗️</span><span class="count">42K</span></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Slide 3: Neon Tokyo Reel -->
+                <div class="reel-slide">
+                  <img src="static/site/reel-3.jpg" alt="Reel 3" loading="eager">
+                  <div class="reel-overlay-ui">
+                    <div class="reel-user-tag">
+                      <span class="user-avatar" style="background:#8b5cf6;">⚡</span>
+                      <b>@tokyo_drift_night</b>
+                      <span class="follow-pill">Follow</span>
+                    </div>
+                    <div class="reel-caption">Neon dreams in Shibuya crossing at 2 AM 🌃🏮 #cyberpunk #tokyo</div>
+                    <div class="reel-audio-bar">🎵 Synthwave Nights — Tokyo Club Mix</div>
+                    <div class="reel-actions">
+                      <div class="action-btn"><span class="icon">❤️</span><span class="count">412K</span></div>
+                      <div class="action-btn"><span class="icon">💬</span><span class="count">3,490</span></div>
+                      <div class="action-btn"><span class="icon">↗️</span><span class="count">88K</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Glass Glare Reflection Layer -->
+              <div class="phone-screen-glare"></div>
             </div>
 
             <!-- Live Dynamic Island Floating Pill -->
@@ -665,23 +935,27 @@
             <div class="phone-blocker" id="phone-blocker">
               <div class="blocker-inner">
                 <img src="static/site/brain-200.png" width="70" height="52" alt="">
-                <h3 style="color: #FF5252; font-size: 20px; font-weight: 800; margin-top: 10px;">Limit Reached!</h3>
-                <p style="font-size: 13px; color: var(--text-2); margin-top: 6px; line-height: 1.35;">You hit your daily limit of 50 reels.<br>Unplug blocked your feed.</p>
-                <button class="btn btn-small" id="btn-reset-sim" style="margin-top: 14px; font-size: 13px; height: 34px; padding: 0 16px;">Try Again ↺</button>
+                <span class="blocker-pill-badge">FEED PAUSED</span>
+                <h3 style="color: #FF5252; font-size: 19px; font-weight: 800; margin-top: 8px;">Limit Reached!</h3>
+                <p style="font-size: 12.5px; color: var(--text-2); margin-top: 5px; line-height: 1.35;">You hit your daily limit of 50 reels.<br>Unplug blocked your feed.</p>
+                <div class="blocker-progress-bar">
+                  <div class="progress-fill" id="blocker-progress"></div>
+                </div>
+                <span class="blocker-countdown" id="blocker-countdown">Auto-restarting demo in 3s...</span>
+                <button class="btn btn-small" id="btn-reset-sim" style="margin-top: 12px; font-size: 12px; height: 32px; padding: 0 14px;">Replay Now ↺</button>
               </div>
-            </div>
-
-            <!-- Tap hint badge at bottom of phone -->
-            <div class="tap-indicator" id="tap-indicator">
-              <span class="tap-icon">👆</span> Tap phone to scroll
             </div>
           </div>
 
-          <!-- Interactive control button below the phone -->
+          <!-- Interactive control button & Auto-demo status below phone -->
           <div class="phone-action-bar">
-            <button class="sim-scroll-btn" id="btn-sim-scroll" type="button">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-              <span>Click to Scroll Reel (<span id="sim-clicks-left">3</span> left to block)</span>
+            <div class="auto-play-badge">
+              <span class="live-pulse"></span>
+              <span>Auto Simulator Active</span>
+            </div>
+            <button class="sim-scroll-btn" id="btn-sim-scroll" type="button" aria-label="Tap to swipe next reel">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+              <span>Tap to Swipe Reel (<span id="sim-clicks-left">3</span> left to block)</span>
             </button>
           </div>
         </div>
@@ -965,20 +1239,69 @@
       }
     });
   });
-  // Interactive Phone Simulator Engine
+  // Interactive & Autonomous Phone Simulator Engine
   let simCount = 47;
   const simLimit = 50;
+  let autoPlayTimer = null;
+  let countdownTimer = null;
+
   const phone = document.getElementById('interactive-phone');
-  const screenWrap = document.getElementById('phone-screen-wrap');
+  const reelTrack = document.getElementById('reel-track');
   const hudCount = document.getElementById('hud-count-val');
   const hudDot = document.getElementById('hud-dot');
   const hudLabel = document.getElementById('hud-dot-label');
   const hudMascot = document.getElementById('hud-mascot-img');
   const mascotBubble = document.getElementById('mascot-bubble');
   const blocker = document.getElementById('phone-blocker');
+  const blockerProgress = document.getElementById('blocker-progress');
+  const blockerCountdown = document.getElementById('blocker-countdown');
   const btnScroll = document.getElementById('btn-sim-scroll');
   const btnReset = document.getElementById('btn-reset-sim');
   const clicksLeftSpan = document.getElementById('sim-clicks-left');
+
+  function updateReelSlide(count) {
+    if (!reelTrack) return;
+    // Map count 47 -> slide 0, 48 -> slide 1, 49+ -> slide 2
+    let slideIndex = 0;
+    if (count === 48) slideIndex = 1;
+    else if (count >= 49) slideIndex = 2;
+    reelTrack.style.transform = `translateY(-${slideIndex * 33.3333}%)`;
+  }
+
+  function startBlockerCountdown() {
+    if (countdownTimer) clearInterval(countdownTimer);
+    let secondsLeft = 3;
+    if (blockerCountdown) blockerCountdown.textContent = `Auto-restarting demo in ${secondsLeft}s...`;
+    if (blockerProgress) {
+      blockerProgress.classList.remove('running');
+      void blockerProgress.offsetWidth; // reflow
+      blockerProgress.classList.add('running');
+    }
+
+    countdownTimer = setInterval(() => {
+      secondsLeft--;
+      if (secondsLeft > 0) {
+        if (blockerCountdown) blockerCountdown.textContent = `Auto-restarting demo in ${secondsLeft}s...`;
+      } else {
+        clearInterval(countdownTimer);
+        countdownTimer = null;
+        resetSimulator();
+      }
+    }, 1000);
+  }
+
+  function resetSimulator() {
+    if (countdownTimer) {
+      clearInterval(countdownTimer);
+      countdownTimer = null;
+    }
+    simCount = 47;
+    if (blocker) blocker.classList.remove('active');
+    if (blockerProgress) blockerProgress.classList.remove('running');
+    updateSimulatorUI();
+    updateReelSlide(simCount);
+    scheduleNextAutoTick(2600);
+  }
 
   function updateSimulatorUI() {
     if (!hudCount) return;
@@ -1041,25 +1364,38 @@
       if (mascotBubble) mascotBubble.textContent = "50 REELS! Feed blocked! 🛑";
       setTimeout(() => {
         if (blocker) blocker.classList.add('active');
-      }, 350);
+        startBlockerCountdown();
+      }, 300);
     }
   }
 
-  function handleSimScroll() {
+  function advanceReel() {
     if (simCount >= simLimit) {
       return;
     }
-
-    // Trigger swipe motion
-    if (screenWrap) {
-      screenWrap.classList.add('swiping');
-      setTimeout(() => {
-        screenWrap.classList.remove('swiping');
-      }, 280);
-    }
-
     simCount++;
+    updateReelSlide(simCount);
     updateSimulatorUI();
+  }
+
+  function scheduleNextAutoTick(delay = 2600) {
+    if (autoPlayTimer) clearTimeout(autoPlayTimer);
+    autoPlayTimer = setTimeout(() => {
+      if (simCount < simLimit) {
+        advanceReel();
+        scheduleNextAutoTick(2600);
+      }
+    }, delay);
+  }
+
+  function handleUserInteraction() {
+    if (simCount >= simLimit) {
+      resetSimulator();
+      return;
+    }
+    advanceReel();
+    // Give user a brief pause before resuming auto-play
+    scheduleNextAutoTick(3500);
   }
 
   if (phone) {
@@ -1067,24 +1403,28 @@
       if (e.target && (e.target.id === 'btn-reset-sim' || e.target.closest('#btn-reset-sim'))) {
         return;
       }
-      handleSimScroll();
+      handleUserInteraction();
     });
   }
 
   if (btnScroll) {
     btnScroll.addEventListener('click', (e) => {
       e.stopPropagation();
-      handleSimScroll();
+      handleUserInteraction();
     });
   }
 
   if (btnReset) {
     btnReset.addEventListener('click', (e) => {
       e.stopPropagation();
-      simCount = 47;
-      updateSimulatorUI();
+      resetSimulator();
     });
   }
+
+  // Initialize view & start auto-animation loop
+  updateSimulatorUI();
+  updateReelSlide(47);
+  scheduleNextAutoTick(2400);
 })();
 </script>
 </body>
