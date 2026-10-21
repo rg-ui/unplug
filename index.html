@@ -37,8 +37,8 @@
     --ink: #021a12;
     --plug: #00875A;
 
-    --display: clamp(44px, 9vw, 80px);
-    --title: clamp(30px, 5vw, 48px);
+    --display: clamp(34px, 9vw, 80px);
+    --title: clamp(28px, 5vw, 48px);
     --body: 18px;
     --small: 14px;
 
@@ -81,6 +81,12 @@
   .brand img { width: 36px; height: 36px; filter: drop-shadow(0 0 12px rgba(0, 245, 196, 0.45)); }
   .brand span { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; color: #FFFFFF; }
   .brand span .mint { color: var(--mint); }
+  @media (max-width: 380px) {
+    .nav .wrap { height: 60px; }
+    .brand span { font-size: 20px; }
+    .brand img { width: 28px; height: 28px; }
+    .btn-small { height: 36px; padding: 0 14px; font-size: 13px; }
+  }
 
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 10px;
@@ -101,7 +107,7 @@
   .hero .wrap { display: grid; gap: 48px; align-items: center; }
   .hero .wrap > * { min-width: 0; }
   .overline { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--electric); opacity: 0.8; }
-  h1 { font-size: var(--display); font-weight: 800; line-height: 1.0; letter-spacing: -0.03em; margin-top: 16px; }
+  h1 { font-size: var(--display); font-weight: 800; line-height: 1.05; letter-spacing: -0.03em; margin-top: 16px; }
   h1 em { font-style: normal; background: linear-gradient(135deg, var(--electric), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .lede { color: var(--text-2); max-width: 460px; margin-top: 20px; }
   .cta-row { margin-top: 32px; display: flex; flex-direction: column; gap: 16px; align-items: flex-start; }
@@ -109,6 +115,12 @@
   .proof b { color: var(--text); font-weight: 700; }
   .proof .star { color: var(--electric); }
   .proof i { width: 3px; height: 3px; border-radius: 50%; background: var(--text-3); }
+
+  @media (max-width: 480px) {
+    .cta-row { align-items: stretch; width: 100%; }
+    .cta-row .btn { width: 100%; justify-content: center; }
+    .proof { justify-content: center; flex-wrap: wrap; text-align: center; }
+  }
 
   /* Realistic Titanium Phone Mockup */
   .phone {
@@ -563,7 +575,19 @@
   .peek { position: absolute; z-index: 2; left: -38px; top: 6px; width: 150px; animation: wave-in .7s var(--ease) .3s both; }
   .peek img { width: 100%; border-radius: 0; filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.45)); }
   .peek .bubble { position: absolute; left: 132px; top: 12px; white-space: nowrap; }
-  @media (max-width: 420px) { .peek { left: -6px; width: 124px; } .peek .bubble { left: 112px; font-size: 15px; } }
+  @media (max-width: 480px) {
+    .phone-stage { padding-top: 72px; width: min(290px, 84vw); }
+    .peek { left: -8px; width: 110px; top: 8px; }
+    .peek .bubble {
+      left: 92px;
+      top: 10px;
+      font-size: 13px;
+      padding: 7px 12px;
+      white-space: normal;
+      max-width: 170px;
+      line-height: 1.25;
+    }
+  }
 
   /* Green battle block */
   .green-block { background: linear-gradient(180deg, var(--electric), var(--electric-2)); color: var(--ink); text-align: center; margin: 24px 0; padding: clamp(56px, 9vw, 112px) 0; position: relative; }
@@ -585,6 +609,14 @@
   .score span { font-size: 12px; font-weight: 800; letter-spacing: 0.12em; margin-top: 8px; }
   .vs { font-size: clamp(32px, 6vw, 56px); font-weight: 800; color: var(--plug); padding-bottom: 64px; }
   .win { display: inline-block; margin-top: 32px; background: var(--ink); color: var(--electric); font-weight: 800; font-size: 15px; padding: 8px 16px; border-radius: var(--pill); }
+
+  @media (max-width: 480px) {
+    .ring { margin-top: 24px; }
+    .boxer img { width: 100px; }
+    .score b { font-size: 22px; padding: 6px 12px; }
+    .score span { font-size: 10px; margin-top: 4px; }
+    .vs { font-size: 24px; padding-bottom: 28px; }
+  }
 
   /* Quote mascot */
   .quote .said { display: flex; flex-direction: column; align-items: center; gap: 20px; }
@@ -686,6 +718,32 @@
     background: linear-gradient(90deg, #34D399 0%, #A3E635 30%, #FBBF24 60%, #FB923C 82%, #EF4444 100%);
     box-shadow: 0 0 16px rgba(52, 211, 153, 0.45), 0 0 20px rgba(239, 68, 68, 0.35);
     opacity: 0.95;
+  }
+
+  @media (max-width: 600px) {
+    .states {
+      gap: 4px;
+      margin-top: 32px;
+    }
+    .state .brain-wrap {
+      height: 56px;
+      margin-bottom: 8px;
+    }
+    .state img {
+      max-width: 52px;
+      max-height: 46px;
+    }
+    .state b {
+      font-size: 18px;
+    }
+    .state span {
+      font-size: 10.5px;
+      margin-top: 4px;
+    }
+    #brain .track {
+      margin-top: 20px;
+      height: 3px;
+    }
   }
 
   /* Feature cards & SVG icons */
@@ -1232,7 +1290,7 @@
           </ul>
         </div>
       </div>
-      <p class="fine reveal">Prices are in Indian Rupees. Unplug Plus is a subscription that renews automatically each month or year until you cancel. You can cancel anytime. Pay in the app by UPI, card or Google Play. Offers in the app may lower the price. See our <a href="#contact">Refund Policy</a>.</p>
+      <p class="fine reveal">Prices are in Indian Rupees. Unplug Plus is a subscription that renews automatically each month or year until you cancel. You can cancel anytime. Pay in the app by UPI, card or Google Play. Offers in the app may lower the price. See our <a href="refund.html">Refund Policy</a>.</p>
     </div>
   </section>
 
@@ -1271,10 +1329,10 @@
       &copy; 2026 Unplug Labs
     </address>
     <nav aria-label="Legal">
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Use</a>
-      <a href="#">Refund Policy</a>
-      <a href="#contact">Contact Us</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Use</a>
+      <a href="refund.html">Refund Policy</a>
+      <a href="contact.html">Contact Us</a>
     </nav>
   </div>
 </footer>
