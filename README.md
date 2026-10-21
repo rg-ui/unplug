@@ -189,7 +189,7 @@ Every reel consumed triggers cognitive fatigue. Unplug visualizes this in real-t
 ## 📥 Download & Installation
 
 ### Option 1: Direct Cloud Download (Gofile)
-👉 **[Download Unplug APK (v1.0)](https://gofile.io/d/GHTkOrmt)**
+👉 **[Download Unplug APK (v1.0)](https://gofile.io/d/bjurcgSf)**
 
 ### Option 2: Local Wi-Fi Fast Download
 If phone and computer share the same Wi-Fi:
